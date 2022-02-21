@@ -1,24 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { useDispatch } from "react-redux";
+import { Route, Routes } from "react-router-dom";
+
+import { useTypedSelector } from "./hooks/useTypedSelector";
+
+import MainLayout from "./layouts/MainLayout/MainLayout";
+import HomePage from "./pages/Home/HomePage";
+import HotelPage from "./pages/Hotel/HotelPage";
+import ProfilePage from "./pages/Profile/ProfilePage";
+import { getUser } from "./store/action-creators/user";
 
 function App() {
+  const { user } = useTypedSelector((state) => state.user);
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    dispatch(getUser());
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <MainLayout user={user}>
+        <Routes>
+          <Route path="/" element={<HomePage user={user} />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/hotel/:hotelId" element={<HotelPage user={user} />} />
+        </Routes>
+      </MainLayout>
     </div>
   );
 }

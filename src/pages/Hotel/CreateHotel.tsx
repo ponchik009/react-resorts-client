@@ -70,6 +70,7 @@ const CreateHotel: React.FC<IProps> = ({ tags }) => {
     }
     formData.append("stars", String(stars));
     formData.append("price", price.value);
+    formData.append("tags", JSON.stringify(selectedTags));
 
     dispatch(createHotel(formData));
     navigate("/");

@@ -44,24 +44,24 @@ const HotelInfo: React.FC<IProps> = ({ hotel, checked = false, isAuth }) => {
         alt={hotel.name}
         style={{ width: "400px" }}
       />
-      <Typography variant="h6">Страна: {hotel.country}</Typography>
+      <Typography variant="h6">Города: {hotel.cities.join(", ")}</Typography>
       <Typography variant="body2">{hotel.description}</Typography>
       <Typography variant="h6">Ценник: {hotel.price}$</Typography>
       <Rating name="read-only" value={hotel.stars} readOnly />
-      <Grid container spacing={1}>
+      <Grid container>
         {hotel.tags &&
           hotel.tags.map((tag) => (
-            <Grid item md={1} xs={4}>
+            <Grid item md={1} xs={4} sx={{ ml: 3 }}>
               <Chip label={tag.name} variant="outlined" />
             </Grid>
           ))}
       </Grid>
       <FormControlLabel
         sx={{ ml: 100 }}
-        label={hotel.likes.length}
+        label=""
         control={
           <Checkbox
-            aria-label={`${hotel.likes.length}`}
+            aria-label=""
             icon={<FavoriteBorder sx={{ fontSize: 60 }} />}
             checkedIcon={<Favorite sx={{ fontSize: 60, color: "#ff0000" }} />}
             checked={checked}

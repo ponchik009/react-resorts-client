@@ -7,6 +7,8 @@ import { ITag } from "../../types/tag";
 import TagsEditor from "./TagsEditor";
 import { useDispatch } from "react-redux";
 import { updateHotel } from "../../store/action-creators/hotel";
+import CitiesEditor from "./CitiesEditor";
+import { DEFAULT_CITIES } from "../../const/cities";
 
 interface IProps {
   hotel: IHotel;
@@ -17,7 +19,9 @@ const HotelEditor: React.FC<IProps> = ({ hotel, tags }) => {
   const dispatch = useDispatch();
 
   const name = useInput(hotel.name);
-  const country = useInput(hotel.country);
+  const [selectedCities, setSelectedCities] = React.useState<string[]>(
+    hotel.cities
+  );
   const description = useInput(hotel.description);
   const price = useInput(String(hotel.price));
   const [stars, setStars] = React.useState<number | null>(hotel.stars);
@@ -52,11 +56,21 @@ const HotelEditor: React.FC<IProps> = ({ hotel, tags }) => {
     }
   };
 
+  const handleCitiesChange = (
+    event: SelectChangeEvent<typeof selectedCities>
+  ) => {
+    const value = event.target.value;
+
+    if (typeof value === "object") {
+      setSelectedCities(value);
+    }
+  };
+
   const update = () => {
     const newHotel = {
       id: hotel.id,
       name: name.value,
-      country: country.value,
+      cities: selectedCities,
       description: description.value,
       price: +price.value,
       stars: stars !== null ? +stars : hotel.stars,
@@ -80,7 +94,7 @@ const HotelEditor: React.FC<IProps> = ({ hotel, tags }) => {
     description.value,
     stars,
     price.value,
-    country.value,
+    selectedCities,
     selectedTags,
   ]);
 
@@ -100,11 +114,10 @@ const HotelEditor: React.FC<IProps> = ({ hotel, tags }) => {
         width="400"
         style={{ marginTop: "10px" }}
       />
-      <TextField
-        label="Страна"
-        style={{ marginTop: "10px" }}
-        value={country.value}
-        onChange={country.onChange}
+      <CitiesEditor
+        cities={DEFAULT_CITIES}
+        selectedCities={selectedCities}
+        handleChange={handleCitiesChange}
       />
       <TextField
         label="Описание"

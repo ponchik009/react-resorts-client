@@ -1,6 +1,7 @@
 import { Container, Typography } from "@mui/material";
 import React from "react";
 import { useDispatch } from "react-redux";
+import CitiesList from "../../components/CitiesList/CitiesList";
 import HotelsList from "../../components/HotelsList";
 import TagsList from "../../components/TagsList/TagsList";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
@@ -32,6 +33,7 @@ const HomePage: React.FC<IProps> = ({ user }) => {
   return (
     <Container>
       <TagsList />
+      <CitiesList />
       {hotels.length > 0 ? (
         <HotelsList hotels={hotels} user={user} />
       ) : (

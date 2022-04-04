@@ -70,7 +70,9 @@ const HotelItem: React.FC<IProps> = ({ hotel, checked, isAuth }) => {
           />
           <CardContent>
             <Typography variant="h4">{hotel.name}</Typography>
-            <Typography variant="h6">Страна: {hotel.country}</Typography>
+            <Typography variant="h6">
+              Города: {hotel.cities.join(", ")}
+            </Typography>
             <Typography variant="body2">{hotel.description}</Typography>
             <Typography variant="h6">Ценник: {hotel.price}$</Typography>
             <Rating name="read-only" value={hotel.stars} readOnly />
@@ -84,7 +86,7 @@ const HotelItem: React.FC<IProps> = ({ hotel, checked, isAuth }) => {
           }}
         >
           <FormControlLabel
-            label={hotel.likes.length}
+            label=""
             control={
               <Checkbox
                 aria-label={`${hotel.likes.length}`}

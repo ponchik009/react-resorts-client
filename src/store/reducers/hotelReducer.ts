@@ -4,7 +4,10 @@ const initialState: HotelState = {
   hotels: [],
   currentHotel: null,
   error: "",
-  currentFilters: [],
+  currentFilters: {
+    tags: [],
+    cities: [],
+  },
   currentQuery: "",
 };
 

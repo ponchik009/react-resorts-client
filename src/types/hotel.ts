@@ -3,7 +3,7 @@ import { ITag } from "./tag";
 export interface IHotel {
   id: number;
   name: string;
-  country: string;
+  cities: string[];
   stars: number;
   image: string;
   price: number;
@@ -17,11 +17,16 @@ export interface IUserLike {
   username: string;
 }
 
+export interface IFilters {
+  tags: ITag[];
+  cities: string[];
+}
+
 export interface HotelState {
   hotels: IHotel[];
   currentHotel: IHotel | null;
   error: string;
-  currentFilters: ITag[];
+  currentFilters: IFilters;
   currentQuery: string;
 }
 
@@ -68,7 +73,7 @@ interface FetchHotelErrorAction {
 
 interface SetFilters {
   type: HotelActionTypes.SET_FILTERS;
-  payload: ITag[];
+  payload: IFilters;
 }
 
 interface SetQuery {

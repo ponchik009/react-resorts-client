@@ -35,14 +35,6 @@ const Search: React.FC<IProps> = ({ disabled }) => {
     }, 1000);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      console.log(e);
-
-      dispatch(fetchHotels([], value));
-    }
-  };
-
   React.useEffect(() => {
     dispatch({
       type: HotelActionTypes.SET_QUERY,
@@ -69,7 +61,6 @@ const Search: React.FC<IProps> = ({ disabled }) => {
         sx={{ ml: 1 }}
         value={value}
         onChange={handleChange}
-        onKeyDown={handleKeyDown}
         disabled={disabled}
       />
     </Container>

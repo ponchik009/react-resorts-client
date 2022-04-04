@@ -3,34 +3,36 @@ import { Grid, Stack, Typography } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { fetchTags } from "../../store/action-creators/tag";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
-import TagItem from "./TagItem";
 import { ITag } from "../../types/tag";
 import { fetchHotels } from "../../store/action-creators/hotel";
 import { HotelActionTypes } from "../../types/hotel";
+import { DEFAULT_CITIES } from "../../const/cities";
+import CityItem from "./CityItem";
 
-const TagsList = () => {
+const CitiesList = () => {
   const dispatch = useDispatch();
-  const { tags } = useTypedSelector((state) => state.tag);
+
   const { currentQuery } = useTypedSelector((state) => state.hotel);
   const { currentFilters } = useTypedSelector((state) => state.hotel);
-
-  const [selectedTags, setSelectedTags] = React.useState<ITag[]>([]);
+  console.log("FILTERS");
+  console.log(currentFilters);
+  const [selectedCities, setSelectedCities] = React.useState<string[]>([]);
   const timer = React.useRef(setTimeout(() => {}, 1));
 
-  const onSelect = (isSelect: boolean, tag: ITag) => {
+  const onSelect = (isSelect: boolean, city: string) => {
     if (timer) {
       clearTimeout(timer.current);
     }
     if (isSelect) {
-      const newTags = [...selectedTags, tag];
-      setSelectedTags(newTags);
+      const newCities = [...selectedCities, city];
+      setSelectedCities(newCities);
       timer.current = setTimeout(() => {
         // запрос с фильтрацией
         dispatch(
           fetchHotels(
             {
               ...currentFilters,
-              tags: newTags,
+              cities: newCities,
             },
             currentQuery
           )
@@ -39,22 +41,22 @@ const TagsList = () => {
           type: HotelActionTypes.SET_FILTERS,
           payload: {
             ...currentFilters,
-            tags: newTags,
+            cities: newCities,
           },
         });
       }, 1000);
     } else {
-      const newTags = selectedTags.filter(
-        (selectedTag) => selectedTag.id !== tag.id
+      const newCities = selectedCities.filter(
+        (selectedCity) => selectedCity !== city
       );
-      setSelectedTags(newTags);
+      setSelectedCities(newCities);
       timer.current = setTimeout(() => {
         // запрос с фильтрацией
         dispatch(
           fetchHotels(
             {
               ...currentFilters,
-              tags: newTags,
+              cities: newCities,
             },
             currentQuery
           )
@@ -63,7 +65,7 @@ const TagsList = () => {
           type: HotelActionTypes.SET_FILTERS,
           payload: {
             ...currentFilters,
-            tags: newTags,
+            cities: newCities,
           },
         });
       }, 1000);
@@ -77,7 +79,7 @@ const TagsList = () => {
         type: HotelActionTypes.SET_FILTERS,
         payload: {
           ...currentFilters,
-          tags: [],
+          cities: [],
         },
       });
     };
@@ -85,19 +87,15 @@ const TagsList = () => {
 
   return (
     <>
-      <Typography variant="body1">Теги: </Typography>
+      <Typography variant="body1">Города: </Typography>
       <Grid container spacing={1}>
-        {tags &&
-          tags.map((tag) => (
-            <TagItem
-              tag={tag}
-              onSelect={onSelect}
-              key={`${tag.name}_${tag.id}`}
-            />
+        {DEFAULT_CITIES &&
+          DEFAULT_CITIES.map((city) => (
+            <CityItem city={city} onSelect={onSelect} key={`${city}_${city}`} />
           ))}
       </Grid>
     </>
   );
 };
 
-export default TagsList;
+export default CitiesList;

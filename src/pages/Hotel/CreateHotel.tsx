@@ -16,6 +16,8 @@ import { ITag } from "../../types/tag";
 import TagsEditor from "./TagsEditor";
 import { createHotel, updateHotel } from "../../store/action-creators/hotel";
 import FileUpload from "../../components/File/FileUpload";
+import CitiesEditor from "./CitiesEditor";
+import { DEFAULT_CITIES } from "../../const/cities";
 
 interface IProps {
   tags: ITag[];
@@ -27,7 +29,7 @@ const CreateHotel: React.FC<IProps> = ({ tags }) => {
 
   const name = useInput("");
   const [picture, setPicture] = React.useState(null);
-  const country = useInput("");
+  const [selectedCities, setSelectedCities] = React.useState<string[]>([]);
   const description = useInput("");
   const price = useInput("0");
   const [stars, setStars] = React.useState<number | null>(0);
@@ -60,11 +62,21 @@ const CreateHotel: React.FC<IProps> = ({ tags }) => {
     }
   };
 
+  const handleCitiesChange = (
+    event: SelectChangeEvent<typeof selectedCities>
+  ) => {
+    const value = event.target.value;
+
+    if (typeof value === "object") {
+      setSelectedCities(value);
+    }
+  };
+
   const create = () => {
     const formData = new FormData();
     formData.append("name", name.value);
     formData.append("description", description.value);
-    formData.append("country", country.value);
+    formData.append("cities", JSON.stringify(selectedCities));
     if (picture) {
       formData.append("image", picture!);
     }
@@ -95,11 +107,10 @@ const CreateHotel: React.FC<IProps> = ({ tags }) => {
       <FileUpload setFile={setPicture} accept="image/*">
         <Button>Загрузить изображение</Button>
       </FileUpload>
-      <TextField
-        label="Страна"
-        style={{ marginTop: "10px" }}
-        value={country.value}
-        onChange={country.onChange}
+      <CitiesEditor
+        cities={DEFAULT_CITIES}
+        selectedCities={selectedCities}
+        handleChange={handleCitiesChange}
       />
       <TextField
         label="Описание"

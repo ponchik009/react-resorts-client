@@ -1,15 +1,26 @@
 import axios from "axios";
 import { Dispatch } from "react";
-import { HotelAction, HotelActionTypes, IHotel } from "../../types/hotel";
+import {
+  HotelAction,
+  HotelActionTypes,
+  IFilters,
+  IHotel,
+} from "../../types/hotel";
 import { ITag } from "../../types/tag";
 
-export const fetchHotels = (filter: ITag[] = [], query: string = "") => {
+export const fetchHotels = (
+  filter: IFilters = { tags: [], cities: [] },
+  query: string = ""
+) => {
   return async (dispatch: Dispatch<HotelAction>) => {
     try {
       let url = `http://localhost:5001/hotels?query=${query}`;
-      if (filter.length > 0) {
-        const tagNames = filter.map((tag) => tag.name);
+      if (filter.tags.length > 0) {
+        const tagNames = filter.tags.map((tag) => tag.name);
         url += "&filter=" + tagNames.join(",");
+      }
+      if (filter.cities.length > 0) {
+        url += "&cities=" + filter.cities.join(",");
       }
       const response = await axios.get(url);
       dispatch({
@@ -17,6 +28,8 @@ export const fetchHotels = (filter: ITag[] = [], query: string = "") => {
         payload: response.data,
       });
     } catch (e) {
+      console.log(e);
+
       dispatch({
         type: HotelActionTypes.FETCH_HOTELS_ERROR,
         payload: "Произошла ошибка при загрузке отелей",

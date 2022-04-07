@@ -75,6 +75,8 @@ const HotelEditor: React.FC<IProps> = ({ hotel, tags }) => {
   };
 
   const update = () => {
+    console.log(picture);
+
     const formData = new FormData();
     formData.append("id", String(hotel.id));
     formData.append("name", name.value);
@@ -101,6 +103,7 @@ const HotelEditor: React.FC<IProps> = ({ hotel, tags }) => {
     name.value,
     description.value,
     stars,
+    picture,
     price.value,
     selectedCities,
     selectedTags,

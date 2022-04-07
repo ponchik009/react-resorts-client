@@ -105,7 +105,7 @@ export const updateHotel = (hotel: FormData) => {
     try {
       const response = await axios.put(
         `http://localhost:5001/hotels/${hotel.get("id")}`,
-        { ...hotel },
+        hotel,
         {
           withCredentials: true,
         }

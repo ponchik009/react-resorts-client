@@ -100,11 +100,11 @@ export const getHotel = (id: number) => {
   };
 };
 
-export const updateHotel = (hotel: IHotel) => {
+export const updateHotel = (hotel: FormData) => {
   return async (dispatch: Dispatch<HotelAction>) => {
     try {
       const response = await axios.put(
-        `http://localhost:5001/hotels/${hotel.id}`,
+        `http://localhost:5001/hotels/${hotel.get("id")}`,
         { ...hotel },
         {
           withCredentials: true,

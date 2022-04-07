@@ -1,5 +1,11 @@
 import React from "react";
-import { Container, Rating, TextField, SelectChangeEvent } from "@mui/material";
+import {
+  Container,
+  Rating,
+  TextField,
+  SelectChangeEvent,
+  Button,
+} from "@mui/material";
 
 import { IHotel } from "../../types/hotel";
 import { useInput } from "../../hooks/useInput";
@@ -9,6 +15,7 @@ import { useDispatch } from "react-redux";
 import { updateHotel } from "../../store/action-creators/hotel";
 import CitiesEditor from "./CitiesEditor";
 import { DEFAULT_CITIES } from "../../const/cities";
+import FileUpload from "../../components/File/FileUpload";
 
 interface IProps {
   hotel: IHotel;
@@ -22,6 +29,7 @@ const HotelEditor: React.FC<IProps> = ({ hotel, tags }) => {
   const [selectedCities, setSelectedCities] = React.useState<string[]>(
     hotel.cities
   );
+  const [picture, setPicture] = React.useState(null);
   const description = useInput(hotel.description);
   const price = useInput(String(hotel.price));
   const [stars, setStars] = React.useState<number | null>(hotel.stars);
@@ -67,19 +75,19 @@ const HotelEditor: React.FC<IProps> = ({ hotel, tags }) => {
   };
 
   const update = () => {
-    const newHotel = {
-      id: hotel.id,
-      name: name.value,
-      cities: selectedCities,
-      description: description.value,
-      price: +price.value,
-      stars: stars !== null ? +stars : hotel.stars,
-      image: hotel.image,
-      tags: selectedTags,
-      likes: hotel.likes,
-    };
+    const formData = new FormData();
+    formData.append("id", String(hotel.id));
+    formData.append("name", name.value);
+    formData.append("description", description.value);
+    formData.append("cities", JSON.stringify(selectedCities));
+    if (picture) {
+      formData.append("image", picture!);
+    }
+    formData.append("stars", String(stars));
+    formData.append("price", price.value);
+    formData.append("tags", JSON.stringify(selectedTags));
 
-    dispatch(updateHotel(newHotel as IHotel));
+    dispatch(updateHotel(formData));
   };
 
   React.useEffect(() => {
@@ -108,12 +116,13 @@ const HotelEditor: React.FC<IProps> = ({ hotel, tags }) => {
       }}
     >
       <TextField label="Название" value={name.value} onChange={name.onChange} />
-      <img
-        src={`http://localhost:5001/${hotel.image}`}
-        alt={hotel.name}
-        width="400"
-        style={{ marginTop: "10px" }}
-      />
+      <FileUpload
+        setFile={setPicture}
+        accept="image/*"
+        path={`http://localhost:5001/${hotel.image}`}
+      >
+        <Button>Загрузить изображение</Button>
+      </FileUpload>
       <CitiesEditor
         cities={DEFAULT_CITIES}
         selectedCities={selectedCities}
